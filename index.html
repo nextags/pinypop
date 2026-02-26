@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Piny Pop ⭐ Estoure & Ganhe</title>
+<link
+href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito:wght@600;70
+0;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
+user-select: none; }
+:root {
+--yellow: #FFD600;
+--yellow-dark: #E6C000;
+--yellow-light: #FFF176;
+--green: #2E7D32;
+--green-light: #4CAF50;
+--orange: #FF6D00;
+--orange-cta: #FF5722;
+--red: #E53935;
+--black: #1A1A1A;
+--white: #FFFFFF;
+--bg: #FFD600;
+--star-gold: #FFB300;
+}
+body {
+font-family: 'Nunito', sans-serif;
+background: var(--bg);
+min-height: 100dvh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+position: relative;
+}
+.top-bar {
+position: fixed; top: 0; left: 0; right: 0;
+background: var(--green); color: white;
+text-align: center; padding: 8px;
+font-size: 0.8rem; font-weight: 700;
+letter-spacing: 0.5px; z-index: 100;
+}
+body::before {
+content: '';
+position: fixed; inset: 0;
+background:
+radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 50%),
+radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1) 0%, transparent 50%),
+repeating-conic-gradient(rgba(255,255,255,0.03) 0% 25%, transparent 0% 50%) 0 0 /
+40px 40px;
+pointer-events: none; z-index: 0;
+}
+.float-star {
+position: fixed; font-size: 1.5rem; opacity: 0.15;
+animation: starFloat 5s ease-in-out infinite;
+pointer-events: none; z-index: 0;
+}
+@keyframes starFloat {
+0%, 100% { transform: translateY(0) rotate(0deg); }
+50% { transform: translateY(-15px) rotate(15deg); }
+}
+.screen {
+display: none; flex-direction: column; align-items: center; justify-content: center;
+width: 100%; max-width: 420px; padding: 20px; padding-top: 50px;
+position: relative; z-index: 10;
+}
+.screen.active { display: flex; }
+.piny-logo {
+background: white; border-radius: 16px; padding: 10px 36px;
+margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+animation: fadeDown 0.5s both;
+}
+.piny-logo-text {
+font-family: 'Archivo Black', sans-serif; font-size: 1.8rem;
+color: var(--black); letter-spacing: 6px; text-transform: uppercase;
+}
+@keyframes fadeDown { 0% { transform: translateY(-20px); opacity: 0; } 100% { transform:
+translateY(0); opacity: 1; } }
+@keyframes fadeUp { 0% { transform: translateY(20px); opacity: 0; } 100% { transform:
+translateY(0); opacity: 1; } }
+@keyframes titlePop { 0% { transform: scale(0) rotate(-8deg); opacity: 0; } 100% {
+transform: scale(1) rotate(0); opacity: 1; } }
+.game-title {
+font-family: 'Archivo Black', sans-serif; font-size: 3rem; color: var(--black);
+text-shadow: 3px 3px 0 rgba(0,0,0,0.1); letter-spacing: 2px;
+animation: titlePop 0.6s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both; margin-bottom: 2px;
+}
+.game-subtitle {
+font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 800;
+color: var(--green); background: white; padding: 4px 16px; border-radius: 20px;
+letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;
+animation: fadeUp 0.5s 0.2s both;
+}
+/* ===== AVATAR SELECTOR ===== */
+.avatar-section { animation: fadeUp 0.5s 0.3s both; margin-bottom: 20px; text-align: center;
+width: 100%; }
+.avatar-section-title {
+font-family: 'Archivo Black', sans-serif; font-size: 0.85rem; color: var(--black);
+letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; opacity: 0.7;
+}
+.avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width:
+340px; margin: 0 auto; }
+.avatar-card {
+background: white; border-radius: 16px; padding: 10px 6px 8px; cursor: pointer;
+transition: all 0.2s; border: 3px solid transparent;
+box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.avatar-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.avatar-card.selected { border-color: var(--orange-cta); background: #FFF3E0; transform:
+scale(1.02); }
+.avatar-card.selected .avatar-name { color: var(--orange-cta); }
+.avatar-preview {
+width: 72px; height: 88px; position: relative;
+}
+.avatar-name {
+font-size: 0.7rem; font-weight: 800; color: #666;
+text-transform: uppercase; letter-spacing: 1px;
+}
+/* ===== AVATAR MINI FACES (Selector) ===== */
+.mini-face {
+width: 62px; height: 70px;
+border-radius: 50% 50% 45% 45%;
+position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+box-shadow: inset -4px -4px 10px rgba(0,0,0,0.06);
+}
+.mini-eye {
+width: 8px; height: 10px; background: var(--black); border-radius: 50%;
+position: absolute; top: 28px;
+}
+.mini-eye.l { left: 15px; }
+.mini-eye.r { right: 15px; }
+.mini-eye::after {
+content: ''; width: 3px; height: 3px; background: white;
+border-radius: 50%; position: absolute; top: 2px; left: 2px;
+}
+.mini-mouth {
+position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+width: 14px; height: 8px; border-bottom: 2px solid rgba(0,0,0,0.2); border-radius: 0 0 50%
+50%;
+}
+.mini-cheek {
+width: 12px; height: 7px; background: rgba(255,130,130,0.25); border-radius: 50%;
+position: absolute; top: 37px;
+}
+.mini-cheek.l { left: 4px; }
+.mini-cheek.r { right: 4px; }
+/* Avatar 1 - Gamer Boy */
+.mini-av1 .mini-face { background: #FFDAB9; }
+.mini-av1 .mini-hair {
+position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+width: 66px; height: 30px; background: #3D2914; border-radius: 50% 50% 0 0; z-index: 2;
+}
+.mini-av1 .mini-hair::before {
+content: ''; position: absolute; top: -4px; right: 2px;
+width: 20px; height: 16px; background: #3D2914; border-radius: 50%; transform:
+rotate(15deg);
+}
+.mini-av1 .hp {
+position: absolute; top: 17px; width: 11px; height: 14px;
+background: var(--green); border-radius: 3px; z-index: 5;
+}
+.mini-av1 .hp.l { left: -2px; }
+.mini-av1 .hp.r { right: -2px; }
+.mini-av1 .hband {
+position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+width: 68px; height: 18px; border-top: 3px solid var(--green); border-radius: 50%; z-index:
+4;
+}
+/* Avatar 2 - E-girl */
+.mini-av2 .mini-face { background: #FFE0D0; }
+.mini-av2 .mini-hair {
+position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+width: 64px; height: 28px; background: #1A1A1A; border-radius: 50% 50% 0 0; z-index: 2;
+}
+.mini-av2 .bun {
+position: absolute; top: -14px; width: 20px; height: 20px;
+background: #1A1A1A; border-radius: 50%; z-index: 3;
+}
+.mini-av2 .bun.l { left: 6px; }
+.mini-av2 .bun.r { right: 6px; }
+.mini-av2 .bun::after {
+content: ''; position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+width: 7px; height: 7px; background: var(--orange-cta); border-radius: 50%;
+}
+.mini-av2 .mini-cheek { background: rgba(255,100,150,0.35); width: 13px; height: 9px; }
+.mini-av2 .mini-mouth { width: 8px; height: 5px; background: #FF6B8A; border-radius: 50%;
+border: none; }
+/* Avatar 3 - Skater */
+.mini-av3 .mini-face { background: #D4A574; }
+.mini-av3 .mini-cap {
+position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
+width: 64px; height: 26px; background: var(--yellow); border-radius: 50% 50% 0 0;
+z-index: 4; border-bottom: 3px solid var(--yellow-dark);
+}
+.mini-av3 .mini-brim {
+position: absolute; top: 16px; left: -6px;
+width: 18px; height: 8px; background: var(--yellow-dark); border-radius: 5px 0 0 5px;
+z-index: 5;
+}
+.mini-av3 .mini-hair {
+position: absolute; top: 20px; right: 0;
+width: 12px; height: 10px; background: #2C1810; border-radius: 0 0 3px 3px; z-index: 3;
+}
+.mini-av3 .mini-eye.l { width: 9px; height: 4px; border-radius: 0; background: none;
+border-bottom: 2px solid var(--black); top: 30px; }
+.mini-av3 .mini-eye.l::after { display: none; }
+.mini-av3 .mini-mouth { width: 14px; border-bottom: 2px solid rgba(0,0,0,0.25); background:
+none; height: 4px; }
+/* Avatar 4 - K-beauty */
+.mini-av4 .mini-face { background: #FFECD2; }
+.mini-av4 .mini-hair {
+position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+width: 66px; height: 32px; background: #5C3D2E; border-radius: 50% 50% 0 0; z-index: 2;
+}
+.mini-av4 .mini-bangs {
+position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+width: 54px; height: 12px; background: #5C3D2E; border-radius: 0 0 50% 50%; z-index: 3;
+}
+.mini-av4 .side {
+position: absolute; top: 26px; width: 8px; height: 36px;
+background: #5C3D2E; border-radius: 0 0 5px 5px; z-index: 1;
+}
+.mini-av4 .side.l { left: 0; }
+.mini-av4 .side.r { right: 0; }
+.mini-av4 .mini-cheek { background: rgba(255,150,180,0.4); width: 12px; height: 9px; top:
+38px; }
+.mini-av4 .mini-mouth { width: 7px; height: 4px; background: #FF8FA3; border-radius: 50%;
+border: none; }
+.mini-av4 .heart { position: absolute; font-size: 6px; z-index: 6; top: 35px; }
+.mini-av4 .heart.l { left: 2px; }
+.mini-av4 .heart.r { right: 2px; }
+/* Avatar 5 - Anime Boy */
+.mini-av5 .mini-face { background: #F5D5B8; }
+.mini-av5 .mini-hair {
+position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+width: 64px; height: 26px; background: #FF5722; border-radius: 50% 50% 0 0; z-index: 2;
+}
+.mini-av5 .spike {
+position: absolute; width: 0; height: 0; z-index: 3;
+}
+.mini-av5 .spike.s1 { top: -14px; left: 12px; border-left: 7px solid transparent; border-right:
+7px solid transparent; border-bottom: 16px solid #FF5722; transform: rotate(-12deg); }
+.mini-av5 .spike.s2 { top: -18px; left: 24px; border-left: 6px solid transparent; border-right:
+6px solid transparent; border-bottom: 20px solid #E64A19; }
+.mini-av5 .spike.s3 { top: -12px; right: 10px; border-left: 7px solid transparent; border-right:
+7px solid transparent; border-bottom: 14px solid #FF5722; transform: rotate(10deg); }
+.mini-av5 .brow {
+position: absolute; top: 24px; width: 9px; height: 3px;
+background: #BF360C; border-radius: 2px; z-index: 4;
+}
+.mini-av5 .brow.l { left: 13px; transform: rotate(-8deg); }
+.mini-av5 .brow.r { right: 13px; transform: rotate(8deg); }
+.mini-av5 .mini-mouth { width: 14px; height: 7px; border-bottom: 2px solid rgba(0,0,0,0.2); }
+/* Avatar 6 - Alt Girl */
+.mini-av6 .mini-face { background: #FFE0D0; }
+.mini-av6 .mini-hair {
+position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+width: 66px; height: 26px; background: linear-gradient(90deg, #7C4DFF, #E040FB);
+border-radius: 50% 50% 0 0; z-index: 2;
+}
+.mini-av6 .mini-hair-side {
+position: absolute; top: 12px; right: -3px;
+width: 14px; height: 22px; background: linear-gradient(180deg, #E040FB, #CE93D8);
+border-radius: 0 3px 6px 0; z-index: 1;
+}
+.mini-av6 .mini-fringe {
+position: absolute; top: 13px; left: 4px;
+width: 26px; height: 14px; background: #7C4DFF;
+border-radius: 0 0 50% 50%; z-index: 3; transform: rotate(-5deg);
+}
+.mini-av6 .piercing {
+position: absolute; bottom: 20px; left: 20px;
+width: 3px; height: 3px; background: silver; border-radius: 50%;
+box-shadow: 0 0 3px rgba(255,255,255,0.5); z-index: 5;
+}
+.mini-av6 .mini-cheek { background: rgba(255,100,200,0.25); }
+.mini-av6 .mini-mouth { width: 8px; height: 4px; background: #E040FB; border-radius: 50%;
+border: none; }
+.instructions {
+text-align: center; color: var(--black); font-size: 0.9rem; font-weight: 700;
+line-height: 1.7; margin-bottom: 20px; animation: fadeUp 0.5s 0.4s both;
+background: rgba(255,255,255,0.5); padding: 12px 18px; border-radius: 16px;
+}
+.instructions .highlight { color: var(--red); }
+.instructions .star-highlight { color: var(--star-gold); }
+.instructions .green-highlight { color: var(--green); }
+.btn-play {
+font-family: 'Archivo Black', sans-serif; font-size: 1.3rem; color: white;
+background: var(--orange-cta); border: none; padding: 15px 55px; border-radius: 14px;
+cursor: pointer; box-shadow: 0 6px 0 #D84315, 0 10px 30px rgba(255,87,34,0.35);
+transition: all 0.15s; animation: fadeUp 0.5s 0.5s both;
+letter-spacing: 2px; text-transform: uppercase;
+}
+.btn-play:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #D84315, 0 14px 35px
+rgba(255,87,34,0.4); }
+.btn-play:active { transform: translateY(4px); box-shadow: 0 2px 0 #D84315; }
+.btn-play:disabled { opacity: 0.4; pointer-events: none; }
+.benefits { display: flex; gap: 10px; margin-top: 16px; animation: fadeUp 0.5s 0.6s both; }
+.benefit-tag {
+background: white; color: var(--black); font-size: 0.68rem; font-weight: 800;
+padding: 5px 10px; border-radius: 8px; display: flex; align-items: center; gap: 3px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.benefit-tag .check { color: var(--green); font-size: 0.85rem; }
+/* ===== GAME HUD ===== */
+.game-hud {
+display: flex; justify-content: space-between; align-items: center;
+width: 100%; max-width: 380px; margin-bottom: 10px; gap: 8px;
+}
+.hud-item {
+background: white; border-radius: 14px; padding: 7px 14px; font-weight: 800;
+font-size: 0.95rem; color: var(--black); box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+display: flex; align-items: center; gap: 5px;
+}
+.hud-item.timer { font-family: 'Archivo Black', sans-serif; font-size: 1.1rem; border-bottom:
+3px solid var(--green); }
+.hud-item.score { font-family: 'Archivo Black', sans-serif; font-size: 1.1rem; border-bottom:
+3px solid var(--star-gold); }
+.hud-item.combo { font-family: 'Archivo Black', sans-serif; font-size: 0.95rem; min-width:
+72px; text-align: center; justify-content: center; border-bottom: 3px solid var(--orange); }
+.progress-bar-container {
+width: 100%; max-width: 380px; height: 6px; background: rgba(255,255,255,0.5);
+border-radius: 3px; margin-bottom: 10px; overflow: hidden;
+}
+.progress-bar { height: 100%; background: var(--green); border-radius: 3px; transition: width
+1s linear; width: 100%; }
+.progress-bar.warning { background: var(--orange); }
+.progress-bar.danger { background: var(--red); animation: dangerPulse 0.5s infinite; }
+@keyframes dangerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+/* ===== GAME AREA ===== */
+.game-area {
+width: 340px; height: 420px;
+border-radius: 50% 50% 42% 42% / 55% 55% 45% 45%;
+position: relative;
+box-shadow: inset -15px -15px 40px rgba(0,0,0,0.06), 0 10px 40px rgba(0,0,0,0.1);
+overflow: hidden; touch-action: manipulation; border: 3px solid white;
+background: #FFDAB9;
+}
+/* Game face features */
+.gf { position: absolute; z-index: 5; pointer-events: none; }
+.gf-eye {
+width: 22px; height: 26px; background: var(--black); border-radius: 50%;
+position: absolute; top: 155px; z-index: 5; pointer-events: none;
+}
+.gf-eye.left { left: 95px; }
+.gf-eye.right { right: 95px; }
+.gf-eye::after {
+content: ''; width: 7px; height: 7px; background: white;
+border-radius: 50%; position: absolute; top: 5px; left: 5px;
+}
+.gf-nose {
+width: 12px; height: 16px; position: absolute; top: 200px;
+left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none;
+border-bottom: 2px solid rgba(0,0,0,0.1); border-right: 2px solid rgba(0,0,0,0.1);
+border-radius: 0 0 50% 50%;
+}
+.gf-mouth {
+width: 30px; height: 14px; position: absolute; bottom: 100px;
+left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none;
+border-bottom: 3px solid rgba(0,0,0,0.15); border-radius: 0 0 50% 50%;
+}
+.gf-cheek {
+width: 32px; height: 20px; background: rgba(255,130,130,0.15);
+border-radius: 50%; position: absolute; top: 220px; z-index: 5; pointer-events: none;
+}
+.gf-cheek.left { left: 50px; }
+.gf-cheek.right { right: 50px; }
+/* ===== GAME AVATAR OVERLAYS ===== */
+.game-avatar-layer { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+/* Gamer - headphones + messy dark hair */
+.gav1-hair {
+position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+width: 100%; height: 110px; background: #3D2914;
+border-radius: 50% 50% 0 0;
+}
+.gav1-hair::before {
+content: ''; position: absolute; top: -12px; right: 60px;
+width: 80px; height: 50px; background: #3D2914; border-radius: 50%; transform:
+rotate(12deg);
+}
+.gav1-hair::after {
+content: ''; position: absolute; top: -6px; left: 70px;
+width: 55px; height: 38px; background: #4A3520; border-radius: 50%; transform:
+rotate(-8deg);
+}
+.gav1-hp {
+position: absolute; width: 22px; height: 30px;
+background: var(--green); border-radius: 6px; z-index: 8; top: 80px;
+}
+.gav1-hp.l { left: 16px; }
+.gav1-hp.r { right: 16px; }
+.gav1-hp::after {
+content: ''; position: absolute; width: 10px; height: 10px;
+background: var(--green-light); border-radius: 50%;
+top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
+.gav1-band {
+position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+width: 320px; height: 50px;
+border-top: 5px solid var(--green); border-radius: 50%; z-index: 7;
+}
+/* E-girl - space buns + dark hair */
+.gav2-hair {
+position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+width: 100%; height: 100px; background: #1A1A1A;
+border-radius: 50% 50% 0 0;
+}
+.gav2-bun {
+position: absolute; top: -25px; width: 55px; height: 55px;
+background: #1A1A1A; border-radius: 50%; z-index: 8;
+}
+.gav2-bun.l { left: 45px; }
+.gav2-bun.r { right: 45px; }
+.gav2-bun::after {
+content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+width: 18px; height: 18px; background: var(--orange-cta); border-radius: 50%;
+}
+/* Skater - backwards cap */
+.gav3-cap {
+position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+width: 100%; height: 95px; background: var(--yellow);
+border-radius: 50% 50% 0 0; z-index: 7;
+border-bottom: 5px solid var(--yellow-dark);
+}
+.gav3-brim {
+position: absolute; top: 70px; left: -10px;
+width: 50px; height: 22px; background: var(--yellow-dark);
+border-radius: 12px 0 0 12px; z-index: 8;
+}
+.gav3-hair {
+position: absolute; top: 80px; right: 15px;
+width: 30px; height: 28px; background: #2C1810;
+border-radius: 0 0 8px 8px; z-index: 6;
+}
+/* K-beauty - bangs + long straight hair */
+.gav4-hair {
+position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+width: 100%; height: 110px; background: #5C3D2E;
+border-radius: 50% 50% 0 0;
+}
+.gav4-bangs {
+position: absolute; top: 75px; left: 50%; transform: translateX(-50%);
+width: 80%; height: 30px; background: #5C3D2E;
+border-radius: 0 0 50% 50%; z-index: 8;
+}
+.gav4-side {
+position: absolute; top: 90px; width: 24px; height: 160px;
+background: #5C3D2E; border-radius: 0 0 12px 12px; z-index: 4;
+}
+.gav4-side.l { left: 10px; }
+.gav4-side.r { right: 10px; }
+.gav4-heart {
+position: absolute; font-size: 14px; z-index: 9; top: 210px;
+}
+.gav4-heart.l { left: 38px; }
+.gav4-heart.r { right: 38px; }
+/* Anime - spiky orange hair */
+.gav5-hair {
+position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+width: 100%; height: 100px; background: #FF5722;
+border-radius: 50% 50% 0 0;
+}
+.gav5-spike { position: absolute; width: 0; height: 0; z-index: 8; }
+.gav5-spike.s1 { top: -35px; left: 60px; border-left: 25px solid transparent; border-right: 25px
+solid transparent; border-bottom: 45px solid #FF5722; transform: rotate(-12deg); }
+.gav5-spike.s2 { top: -45px; left: 120px; border-left: 22px solid transparent; border-right:
+22px solid transparent; border-bottom: 50px solid #E64A19; }
+.gav5-spike.s3 { top: -30px; right: 55px; border-left: 22px solid transparent; border-right:
+22px solid transparent; border-bottom: 38px solid #FF5722; transform: rotate(10deg); }
+.gav5-spike.s4 { top: -20px; right: 30px; border-left: 18px solid transparent; border-right:
+18px solid transparent; border-bottom: 30px solid #BF360C; transform: rotate(18deg); }
+.gav5-brow {
+position: absolute; top: 138px; width: 22px; height: 4px;
+background: #BF360C; border-radius: 2px; z-index: 9;
+}
+.gav5-brow.l { left: 88px; transform: rotate(-10deg); }
+.gav5-brow.r { right: 88px; transform: rotate(10deg); }
+/* Alt - purple gradient short hair + piercing */
+.gav6-hair {
+position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+width: 100%; height: 100px;
+background: linear-gradient(90deg, #7C4DFF, #E040FB);
+border-radius: 50% 50% 0 0;
+}
+.gav6-fringe {
+position: absolute; top: 68px; left: 40px;
+width: 120px; height: 40px; background: #7C4DFF;
+border-radius: 0 0 60% 40%; z-index: 8; transform: rotate(-3deg);
+}
+.gav6-side {
+position: absolute; top: 70px; right: 10px;
+width: 40px; height: 80px;
+background: linear-gradient(180deg, #E040FB, #CE93D8);
+border-radius: 0 5px 15px 0; z-index: 4;
+}
+.gav6-piercing {
+position: absolute; top: 212px; left: 148px;
+width: 6px; height: 6px; background: silver; border-radius: 50%;
+box-shadow: 0 0 4px rgba(255,255,255,0.8); z-index: 9;
+}
+/* Hide all game avatar layers by default */
+.game-avatar-layer { display: none; }
+.game-avatar-layer.active { display: block; }
+/* Pimples */
+.pimple {
+position: absolute; border-radius: 50%; cursor: pointer; z-index: 10;
+animation: pimpleAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); transition: transform 0.1s;
+}
+.pimple:active { transform: scale(0.8); }
+.pimple-normal {
+background: radial-gradient(circle at 35% 35%, #FF9E9E, #E53935, #C62828);
+box-shadow: 0 3px 10px rgba(229,57,53,0.5), inset 0 -2px 4px rgba(0,0,0,0.2);
+}
+.pimple-big {
+background: radial-gradient(circle at 35% 35%, #FFB3B3, #FF5252, #E53935);
+box-shadow: 0 4px 14px rgba(229,57,53,0.6), inset 0 -3px 6px rgba(0,0,0,0.2);
+}
+.pimple-star {
+background: radial-gradient(circle at 35% 35%, var(--yellow-light), var(--yellow),
+var(--star-gold));
+box-shadow: 0 3px 15px rgba(255,179,0,0.6), inset 0 -2px 4px rgba(0,0,0,0.1);
+animation: pimpleAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), starGlow 1s ease-in-out
+infinite;
+}
+@keyframes starGlow {
+0%, 100% { box-shadow: 0 3px 15px rgba(255,179,0,0.5); }
+50% { box-shadow: 0 3px 25px rgba(255,179,0,0.9), 0 0 40px rgba(255,214,0,0.3); }
+}
+.pimple-star::after {
+content: '⭐'; position: absolute; top: 50%; left: 50%;
+transform: translate(-50%, -50%); font-size: 16px;
+}
+.pimple-piny {
+background: radial-gradient(circle at 35% 35%, #FFE082, var(--yellow),
+var(--yellow-dark));
+box-shadow: 0 3px 15px rgba(255,214,0,0.6), inset 0 -2px 4px rgba(0,0,0,0.1);
+animation: pimpleAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), pinyGlow 0.8s ease-in-out
+infinite;
+display: flex; align-items: center; justify-content: center;
+font-size: 10px; font-family: 'Archivo Black', sans-serif; color: var(--black); letter-spacing:
+1px;
+}
+@keyframes pinyGlow {
+0%, 100% { box-shadow: 0 3px 15px rgba(255,214,0,0.5); }
+50% { box-shadow: 0 3px 25px rgba(255,214,0,1), 0 0 45px rgba(255,214,0,0.4); }
+}
+@keyframes pimpleAppear { 0% { transform: scale(0); opacity: 0; } 100% { transform:
+scale(1); opacity: 1; } }
+.pop-effect {
+position: absolute; pointer-events: none; z-index: 20;
+animation: popBurst 0.5s forwards;
+}
+@keyframes popBurst { 0% { transform: scale(0.5); opacity: 1; } 100% { transform:
+scale(2.5); opacity: 0; } }
+.score-popup {
+position: absolute; font-family: 'Archivo Black', sans-serif; font-size: 1.3rem;
+pointer-events: none; z-index: 25; animation: scoreFloat 0.8s forwards;
+text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+@keyframes scoreFloat {
+0% { transform: translateY(0) scale(0.5); opacity: 1; }
+50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
+100% { transform: translateY(-60px) scale(1); opacity: 0; }
+}
+/* ===== RESULT ===== */
+.result-card {
+background: white; border-radius: 24px; padding: 30px 24px; text-align: center;
+box-shadow: 0 15px 50px rgba(0,0,0,0.12); max-width: 370px; width: 100%;
+animation: cardPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); border: 3px solid
+var(--yellow);
+}
+@keyframes cardPopIn { 0% { transform: scale(0.5) translateY(50px); opacity: 0; } 100% {
+transform: scale(1) translateY(0); opacity: 1; } }
+.result-emoji { font-size: 3rem; margin-bottom: 6px; }
+.result-title { font-family: 'Archivo Black', sans-serif; font-size: 1.7rem; color: var(--black);
+margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.result-score { font-family: 'Archivo Black', sans-serif; font-size: 2.8rem; color: var(--orange);
+margin-bottom: 2px; }
+.result-label { font-size: 0.8rem; color: #888; font-weight: 800; margin-bottom: 14px;
+letter-spacing: 3px; text-transform: uppercase; }
+.result-stats { display: flex; gap: 14px; justify-content: center; margin-bottom: 18px;
+font-size: 0.78rem; color: #666; font-weight: 700; }
+.coupon-box {
+background: var(--yellow); border: 3px dashed var(--star-gold); border-radius: 16px;
+padding: 16px; margin-bottom: 18px; position: relative; overflow: hidden;
+}
+.coupon-box::before {
+content: ''; position: absolute; inset: 0;
+background: repeating-linear-gradient(45deg, transparent, transparent 10px,
+rgba(255,255,255,0.15) 10px, rgba(255,255,255,0.15) 20px);
+}
+.coupon-label { font-size: 0.72rem; color: var(--black); font-weight: 800; letter-spacing: 2px;
+text-transform: uppercase; margin-bottom: 4px; position: relative; }
+.coupon-code { font-family: 'Archivo Black', sans-serif; font-size: 1.8rem; color: var(--black);
+position: relative; letter-spacing: 4px; }
+.coupon-desc { font-size: 0.8rem; color: var(--black); font-weight: 700; margin-top: 4px;
+position: relative; opacity: 0.7; }
+.btn-restart {
+font-family: 'Archivo Black', sans-serif; font-size: 1rem; color: white;
+background: var(--orange-cta); border: none; padding: 13px 36px; border-radius: 14px;
+cursor: pointer; box-shadow: 0 4px 0 #D84315, 0 8px 25px rgba(255,87,34,0.3);
+transition: all 0.15s; text-transform: uppercase; letter-spacing: 1px;
+}
+.btn-restart:hover { transform: translateY(-2px); }
+.btn-restart:active { transform: translateY(3px); box-shadow: 0 1px 0 #D84315; }
+.btn-coupon {
+font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 800;
+color: var(--green); background: white; border: 2px solid var(--green);
+padding: 11px 28px; border-radius: 14px; cursor: pointer; transition: all 0.2s;
+margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;
+}
+.btn-coupon:hover { background: var(--green); color: white; }
+.btn-shop {
+font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 800;
+color: var(--orange); background: none; border: none; padding: 8px;
+cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-top: 4px;
+}
+.confetti-piece { position: fixed; z-index: 100; pointer-events: none; animation: confettiFall
+linear forwards; }
+@keyframes confettiFall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+100% { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+.shake { animation: shake 0.15s; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform:
+translateX(-3px); } 75% { transform: translateX(3px); } }
+.countdown-overlay {
+position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+z-index: 50; background: rgba(255,214,0,0.9); backdrop-filter: blur(8px);
+}
+.countdown-number {
+font-family: 'Archivo Black', sans-serif; font-size: 8rem; color: var(--black);
+animation: countPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+}
+@keyframes countPop { 0% { transform: scale(3); opacity: 0; } 50% { transform: scale(0.9);
+opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+.timer-warning { animation: timerPulse 0.5s ease-in-out infinite; }
+@keyframes timerPulse { 0%, 100% { color: var(--red); } 50% { color: var(--orange);
+transform: scale(1.05); } }
+@media (max-width: 400px) {
+.game-area { width: 300px; height: 370px; }
+.game-title { font-size: 2.5rem; }
+.avatar-grid { max-width: 300px; gap: 8px; }
+.result-card { padding: 24px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="top-bar">Frete rápido para todo o Brasil 🚚</div>
+<div class="float-star" style="top:10%;left:8%;animation-delay:0s">⭐</div>
+<div class="float-star"
+style="top:25%;right:12%;animation-delay:1.2s;font-size:1rem">⭐</div>
+<div class="float-star"
+style="bottom:15%;left:15%;animation-delay:0.6s;font-size:2rem">⭐</div>
+<div class="float-star" style="bottom:30%;right:8%;animation-delay:1.8s">⭐</div>
+<!-- ===== START SCREEN ===== -->
+<div id="startScreen" class="screen active">
+<div class="piny-logo"><div class="piny-logo-text">PINY</div></div>
+<div class="game-title">PINY POP</div>
+<div class="game-subtitle">Estoure & Ganhe</div>
+<div class="avatar-section">
+<div class="avatar-section-title">Escolha seu avatar</div>
+<div class="avatar-grid">
+<!-- 1 Gamer -->
+<div class="avatar-card" onclick="selectAvatar(1)" id="av-card-1">
+<div class="avatar-preview mini-av1">
+<div class="mini-face">
+<div class="mini-hair"></div>
+<div class="hband"></div>
+<div class="hp l"></div>
+<div class="hp r"></div>
+<div class="mini-eye l"></div>
+<div class="mini-eye r"></div>
+<div class="mini-cheek l"></div>
+<div class="mini-cheek r"></div>
+<div class="mini-mouth"></div>
+</div>
+</div>
+<div class="avatar-name">Gamer</div>
+</div>
+<!-- 2 E-girl -->
+<div class="avatar-card" onclick="selectAvatar(2)" id="av-card-2">
+<div class="avatar-preview mini-av2">
+<div class="mini-face">
+<div class="mini-hair"></div>
+<div class="bun l"></div>
+<div class="bun r"></div>
+<div class="mini-eye l"></div>
+<div class="mini-eye r"></div>
+<div class="mini-cheek l"></div>
+<div class="mini-cheek r"></div>
+<div class="mini-mouth"></div>
+</div>
+</div>
+<div class="avatar-name">E-girl</div>
+</div>
+<!-- 3 Skater -->
+<div class="avatar-card" onclick="selectAvatar(3)" id="av-card-3">
+<div class="avatar-preview mini-av3">
+<div class="mini-face">
+<div class="mini-cap"></div>
+<div class="mini-brim"></div>
+<div class="mini-hair"></div>
+<div class="mini-eye l"></div>
+<div class="mini-eye r"></div>
+<div class="mini-mouth"></div>
+</div>
+</div>
+<div class="avatar-name">Skater</div>
+</div>
+<!-- 4 K-beauty -->
+<div class="avatar-card" onclick="selectAvatar(4)" id="av-card-4">
+<div class="avatar-preview mini-av4">
+<div class="mini-face">
+<div class="mini-hair"></div>
+<div class="mini-bangs"></div>
+<div class="side l"></div>
+<div class="side r"></div>
+<div class="mini-eye l"></div>
+<div class="mini-eye r"></div>
+<div class="mini-cheek l"></div>
+<div class="mini-cheek r"></div>
+<div class="mini-mouth"></div>
+<div class="heart l">♥</div>
+<div class="heart r">♥</div>
+</div>
+</div>
+<div class="avatar-name">K-beauty</div>
+</div>
+<!-- 5 Anime -->
+<div class="avatar-card" onclick="selectAvatar(5)" id="av-card-5">
+<div class="avatar-preview mini-av5">
+<div class="mini-face">
+<div class="mini-hair"></div>
+<div class="spike s1"></div>
+<div class="spike s2"></div>
+<div class="spike s3"></div>
+<div class="brow l"></div>
+<div class="brow r"></div>
+<div class="mini-eye l"></div>
+<div class="mini-eye r"></div>
+<div class="mini-mouth"></div>
+</div>
+</div>
+<div class="avatar-name">Anime</div>
+</div>
+<!-- 6 Alt -->
+<div class="avatar-card" onclick="selectAvatar(6)" id="av-card-6">
+<div class="avatar-preview mini-av6">
+<div class="mini-face">
+<div class="mini-hair"></div>
+<div class="mini-hair-side"></div>
+<div class="mini-fringe"></div>
+<div class="piercing"></div>
+<div class="mini-eye l"></div>
+<div class="mini-eye r"></div>
+<div class="mini-cheek l"></div>
+<div class="mini-cheek r"></div>
+<div class="mini-mouth"></div>
+</div>
+</div>
+<div class="avatar-name">Alt</div>
+</div>
+</div>
+</div>
+<div class="instructions">
+Toque nas <span class="highlight">espinhas</span> para estourar!<br>
+Pegue as <span class="star-highlight">⭐ Piny Stars</span> para bônus!<br>
+<span class="green-highlight">Quanto mais pontos, melhor o cupom!</span>
+</div>
+<button class="btn-play" id="btnPlay" onclick="startCountdown()" disabled>ESCOLHA SEU
+AVATAR</button>
+<div class="benefits">
+<div class="benefit-tag"><span class="check">✓</span> Cupom real</div>
+<div class="benefit-tag"><span class="check">✓</span> 100% grátis</div>
+<div class="benefit-tag"><span class="check">✓</span> 30 segundos</div>
+</div>
+</div>
+<!-- ===== GAME SCREEN ===== -->
+<div id="gameScreen" class="screen">
+<div class="game-hud">
+<div class="hud-item timer">⏱ <span id="timerDisplay">30</span>s</div>
+<div class="hud-item combo" id="comboDisplay" style="opacity:0.3"></div>
+<div class="hud-item score">⭐ <span id="scoreDisplay">0</span></div>
+</div>
+<div class="progress-bar-container">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+<div class="game-area" id="gameArea">
+<!-- Avatar layers - one per avatar, toggled by JS -->
+<div class="game-avatar-layer" id="gavLayer1">
+<div class="gav1-hair"></div>
+<div class="gav1-band"></div>
+<div class="gav1-hp l"></div>
+<div class="gav1-hp r"></div>
+</div>
+<div class="game-avatar-layer" id="gavLayer2">
+<div class="gav2-hair"></div>
+<div class="gav2-bun l"></div>
+<div class="gav2-bun r"></div>
+</div>
+<div class="game-avatar-layer" id="gavLayer3">
+<div class="gav3-cap"></div>
+<div class="gav3-brim"></div>
+<div class="gav3-hair"></div>
+</div>
+<div class="game-avatar-layer" id="gavLayer4">
+<div class="gav4-hair"></div>
+<div class="gav4-bangs"></div>
+<div class="gav4-side l"></div>
+<div class="gav4-side r"></div>
+<div class="gav4-heart l">♥</div>
+<div class="gav4-heart r">♥</div>
+</div>
+<div class="game-avatar-layer" id="gavLayer5">
+<div class="gav5-hair"></div>
+<div class="gav5-spike s1"></div>
+<div class="gav5-spike s2"></div>
+<div class="gav5-spike s3"></div>
+<div class="gav5-spike s4"></div>
+<div class="gav5-brow l"></div>
+<div class="gav5-brow r"></div>
+</div>
+<div class="game-avatar-layer" id="gavLayer6">
+<div class="gav6-hair"></div>
+<div class="gav6-fringe"></div>
+<div class="gav6-side"></div>
+<div class="gav6-piercing"></div>
+</div>
+<!-- Face features -->
+<div class="gf-eye left"></div>
+<div class="gf-eye right"></div>
+<div class="gf-nose"></div>
+<div class="gf-cheek left"></div>
+<div class="gf-cheek right"></div>
+<div class="gf-mouth"></div>
+</div>
+</div>
+<!-- RESULT -->
+<div id="resultScreen" class="screen"></div>
+<!-- COUNTDOWN -->
+<div id="countdownOverlay" class="countdown-overlay" style="display:none">
+<div class="countdown-number" id="countdownNumber"></div>
+</div>
+<script>
+const avatarConfig = {
+1: { name: 'Gamer', skin: '#FFDAB9', emoji: '🎮', cheekColor: 'rgba(255,130,130,0.15)' },
+2: { name: 'E-girl', skin: '#FFE0D0', emoji: '🖤', cheekColor: 'rgba(255,100,150,0.3)' },
+3: { name: 'Skater', skin: '#D4A574', emoji: '🛹', cheekColor: 'rgba(180,100,60,0.15)' },
+4: { name: 'K-beauty', skin: '#FFECD2', emoji: '💖', cheekColor: 'rgba(255,150,180,0.3)' },
+5: { name: 'Anime', skin: '#F5D5B8', emoji: '⚡', cheekColor: 'rgba(255,130,130,0.12)' },
+6: { name: 'Alt', skin: '#FFE0D0', emoji: '💜', cheekColor: 'rgba(255,100,200,0.2)' },
+};
+let selectedAvatar = null;
+let score = 0, timeLeft = 30, combo = 0, maxCombo = 0;
+let gameTimer = null, spawnTimer = null;
+let totalPopped = 0, starsCollected = 0, gameActive = false, difficulty = 1;
+let activePimples = 0;
+const MAX_ACTIVE_PIMPLES = 14;
+const gameArea = document.getElementById('gameArea');
+const timerDisplay = document.getElementById('timerDisplay');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const comboDisplay = document.getElementById('comboDisplay');
+const progressBar = document.getElementById('progressBar');
+const btnPlay = document.getElementById('btnPlay');
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let audioReady = false;
+
+function unlockAudio() {
+if (audioReady) return;
+if (audioCtx.state === 'suspended') audioCtx.resume();
+audioReady = true;
+}
+
+function playTone(freq, duration, type = 'sine', volume = 0.02) {
+if (!audioReady) return;
+const osc = audioCtx.createOscillator();
+const gain = audioCtx.createGain();
+osc.type = type;
+osc.frequency.value = freq;
+gain.gain.value = volume;
+osc.connect(gain);
+gain.connect(audioCtx.destination);
+const now = audioCtx.currentTime;
+gain.gain.setValueAtTime(volume, now);
+gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+osc.start(now);
+osc.stop(now + duration);
+}
+
+function playClickSound() {
+playTone(820, 0.05, 'triangle', 0.02);
+}
+
+function playPopSound(type) {
+if (type === 'pimple-star') {
+playTone(1120, 0.08, 'triangle', 0.024);
+return;
+}
+if (type === 'pimple-piny') {
+playTone(680, 0.08, 'square', 0.024);
+return;
+}
+playTone(380, 0.04, 'square', 0.018);
+}
+
+function playSuccessSound() {
+playTone(620, 0.05, 'triangle', 0.02);
+setTimeout(() => playTone(920, 0.08, 'triangle', 0.02), 50);
+}
+
+document.addEventListener('pointerdown', (event) => {
+unlockAudio();
+if (event.target.closest('button, .avatar-card')) playClickSound();
+}, { passive: true });
+function selectAvatar(id) {
+selectedAvatar = id;
+document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+document.getElementById(`av-card-${id}`).classList.add('selected');
+btnPlay.disabled = false;
+btnPlay.textContent = 'JOGAR AGORA';
+btnPlay.style.animation = 'none';
+void btnPlay.offsetWidth;
+btnPlay.style.animation = 'fadeUp 0.3s both';
+}
+function applyAvatarToGame() {
+const av = avatarConfig[selectedAvatar];
+// Skin color
+gameArea.style.background = av.skin;
+// Cheek color
+document.querySelectorAll('.gf-cheek').forEach(c => c.style.background = av.cheekColor);
+// Show correct hair layer, hide others
+for (let i = 1; i <= 6; i++) {
+document.getElementById(`gavLayer${i}`).classList.toggle('active', i === selectedAvatar);
+}
+}
+// Safe zones for face features + hair area
+const safeZones = [
+{ x: 85, y: 143, w: 42, h: 40 }, // left eye
+{ x: 213, y: 143, w: 42, h: 40 }, // right eye
+{ x: 155, y: 190, w: 30, h: 25 }, // nose
+{ x: 138, y: 250, w: 64, h: 30 }, // mouth
+];
+function isInSafeZone(x, y, size) {
+for (const z of safeZones) {
+if (x + size > z.x && x < z.x + z.w && y + size > z.y && y < z.y + z.h) return true;
+}
+return false;
+}
+function startCountdown() {
+document.getElementById('startScreen').classList.remove('active');
+document.getElementById('gameScreen').classList.add('active');
+applyAvatarToGame();
+const overlay = document.getElementById('countdownOverlay');
+const num = document.getElementById('countdownNumber');
+overlay.style.display = 'flex';
+let count = 3;
+num.textContent = count;
+num.style.animation = 'none'; void num.offsetWidth;
+num.style.animation = 'countPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+const ci = setInterval(() => {
+count--;
+if (count > 0) {
+num.textContent = count;
+num.style.animation = 'none'; void num.offsetWidth;
+num.style.animation = 'countPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+} else {
+num.textContent = 'GO!'; num.style.color = 'var(--green)';
+num.style.animation = 'none'; void num.offsetWidth;
+num.style.animation = 'countPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+clearInterval(ci);
+setTimeout(() => { overlay.style.display = 'none'; num.style.color = 'var(--black)';
+startGame(); }, 600);
+}
+}, 700);
+}
+function startGame() {
+clearInterval(gameTimer);
+clearTimeout(spawnTimer);
+score = 0; timeLeft = 30; combo = 0; maxCombo = 0;
+totalPopped = 0; starsCollected = 0; difficulty = 1; gameActive = true; activePimples = 0;
+progressBar.style.width = '100%'; progressBar.className = 'progress-bar';
+timerDisplay.parentElement.className = 'hud-item timer';
+timerDisplay.parentElement.style.borderColor = 'var(--green)';
+updateHUD(); scheduleSpawn();
+gameTimer = setInterval(() => {
+timeLeft--;
+timerDisplay.textContent = timeLeft;
+progressBar.style.width = (timeLeft / 30 * 100) + '%';
+if (timeLeft <= 10) { progressBar.className = 'progress-bar warning';
+timerDisplay.parentElement.style.borderColor = 'var(--orange)'; }
+if (timeLeft <= 5) { progressBar.className = 'progress-bar danger';
+timerDisplay.parentElement.className = 'hud-item timer timer-warning'; }
+if (timeLeft === 22) difficulty = 2;
+if (timeLeft === 14) difficulty = 3;
+if (timeLeft === 7) difficulty = 4;
+if (timeLeft <= 0) endGame();
+}, 1000);
+}
+function scheduleSpawn() {
+if (!gameActive) return;
+const delay = Math.max(400, 1200 - (difficulty * 200)) + Math.random() * 400;
+spawnTimer = setTimeout(() => {
+if (!gameActive) return;
+spawnPimple();
+if (difficulty >= 2 && Math.random() < 0.3) setTimeout(() => spawnPimple(), 150);
+if (difficulty >= 3 && Math.random() < 0.25) setTimeout(() => spawnPimple(), 300);
+scheduleSpawn();
+}, delay);
+}
+function spawnPimple() {
+if (!gameActive) return;
+if (activePimples >= MAX_ACTIVE_PIMPLES) return;
+const areaW = gameArea.offsetWidth, areaH = gameArea.offsetHeight;
+const rand = Math.random();
+let type, size, points, lifetime;
+if (rand < 0.08) { type = 'pimple-piny'; size = 46; points = 75; lifetime = 1600; }
+else if (rand < 0.18) { type = 'pimple-star'; size = 40; points = 50; lifetime = 1800; }
+else if (rand < 0.35) { type = 'pimple-big'; size = 44 + Math.random() * 10; points = 20;
+lifetime = 2500 - (difficulty * 200); }
+else { type = 'pimple-normal'; size = 30 + Math.random() * 12; points = 10; lifetime = 2200
+- (difficulty * 200); }
+let x, y, attempts = 0;
+const minY = 120; // below hair area
+do {
+x = 20 + Math.random() * (areaW - size - 40);
+y = minY + Math.random() * (areaH - size - minY - 20);
+attempts++;
+} while (isInSafeZone(x, y, size) && attempts < 20);
+if (attempts >= 20) return;
+const el = document.createElement('div');
+el.className = `pimple ${type}`;
+el.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+el.dataset.points = points; el.dataset.type = type;
+if (type === 'pimple-piny') el.textContent = 'PINY';
+const pop = (e) => { e.preventDefault(); e.stopPropagation(); popPimple(el); };
+el.addEventListener('pointerdown', pop);
+gameArea.appendChild(el);
+activePimples++;
+setTimeout(() => {
+if (el.parentNode && gameActive) {
+combo = 0; updateHUD();
+el.style.transition = 'transform 0.2s, opacity 0.2s';
+el.style.transform = 'scale(0)'; el.style.opacity = '0';
+setTimeout(() => {
+if (el.parentNode) {
+el.remove();
+activePimples = Math.max(0, activePimples - 1);
+}
+}, 200);
+}
+}, lifetime);
+}
+function popPimple(el) {
+if (!el.parentNode || !gameActive) return;
+const pts = parseInt(el.dataset.points), type = el.dataset.type;
+const rect = el.getBoundingClientRect(), aRect = gameArea.getBoundingClientRect();
+const cx = rect.left - aRect.left + rect.width / 2;
+const cy = rect.top - aRect.top + rect.height / 2;
+combo++; if (combo > maxCombo) maxCombo = combo;
+const mult = Math.min(combo, 5);
+const total = pts * mult;
+score += total; totalPopped++;
+if (type === 'pimple-star') starsCollected++;
+el.remove(); createPopEffect(cx, cy, type);
+activePimples = Math.max(0, activePimples - 1);
+playPopSound(type);
+const popup = document.createElement('div');
+popup.className = 'score-popup';
+popup.style.left = cx + 'px'; popup.style.top = cy + 'px';
+if (type === 'pimple-star') { popup.textContent = `+${total} ⭐`; popup.style.color =
+'#F59E0B'; }
+else if (type === 'pimple-piny') { popup.textContent = `+${total} PINY!`; popup.style.color =
+'var(--green)'; }
+else { popup.textContent = combo > 1 ? `+${total} x${mult}` : `+${total}`; popup.style.color
+= combo > 2 ? 'var(--orange)' : 'var(--red)'; }
+gameArea.appendChild(popup); setTimeout(() => popup.remove(), 800);
+if (combo >= 3) gameArea.classList.add('shake');
+setTimeout(() => gameArea.classList.remove('shake'), 150);
+updateHUD();
+}
+function createPopEffect(x, y, type) {
+const cs = { 'pimple-star': ['#FBBF24','#FDE68A','#F59E0B','#FEF3C7'], 'pimple-piny':
+['#FFD600','#4CAF50','#FFD600','#FFF'], 'pimple-normal':
+['#FF5252','#FFD600','#FF9E9E','#E53935'], 'pimple-big':
+['#FF5252','#FFD600','#FF9E9E','#E53935'] };
+const colors = cs[type] || cs['pimple-normal'];
+for (let i = 0; i < 8; i++) {
+const p = document.createElement('div');
+Object.assign(p.style, { position:'absolute', width:'6px', height:'6px', borderRadius:'50%',
+background: colors[i%colors.length], left:x+'px', top:y+'px', pointerEvents:'none', zIndex:'20'
+});
+const a = (i/8)*Math.PI*2, d = 20+Math.random()*25;
+p.animate([
+{ transform:'translate(0,0) scale(1)', opacity:1 },
+{ transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) scale(0)`, opacity:0 }
+], { duration:400, fill:'forwards' });
+gameArea.appendChild(p); setTimeout(() => p.remove(), 400);
+}
+const ring = document.createElement('div');
+ring.className = 'pop-effect';
+Object.assign(ring.style, { left:(x-20)+'px', top:(y-20)+'px', width:'40px', height:'40px',
+borderRadius:'50%', border:`3px solid ${type.includes('star')||type.includes('piny') ?
+'var(--yellow)' : 'var(--red)'}` });
+gameArea.appendChild(ring); setTimeout(() => ring.remove(), 500);
+}
+function updateHUD() {
+scoreDisplay.textContent = score;
+if (combo >= 2) { comboDisplay.textContent = `🔥 x${Math.min(combo,5)}`;
+comboDisplay.style.opacity = '1'; }
+else { comboDisplay.textContent = ''; comboDisplay.style.opacity = '0.3'; }
+}
+function endGame() {
+gameActive = false; clearInterval(gameTimer); clearTimeout(spawnTimer);
+document.querySelectorAll('.pimple').forEach(p => p.remove());
+activePimples = 0;
+setTimeout(() => { document.getElementById('gameScreen').classList.remove('active');
+showResults(); }, 500);
+}
+function showResults() {
+const screen = document.getElementById('resultScreen');
+const av = avatarConfig[selectedAvatar];
+let tier, emoji, couponCode, couponDesc;
+if (score >= 800) { tier='LENDÁRIA!'; emoji='👑'; couponCode='PINYPOP20';
+couponDesc='20% OFF em qualquer produto Piny'; }
+else if (score >= 500) { tier='INCRÍVEL!'; emoji='🔥'; couponCode='PINYPOP15';
+couponDesc='15% OFF em qualquer produto Piny'; }
+else if (score >= 250) { tier='MUITO BEM!'; emoji='✨'; couponCode='PINYPOP10';
+couponDesc='10% OFF em qualquer produto Piny'; }
+else { tier='BOA TENTATIVA!'; emoji='💪'; couponCode='PINYPOP5'; couponDesc='5% OFF em qualquer produto Piny'; }
+screen.innerHTML = `
+<div class="result-card">
+<div style="font-size:2.5rem;margin-bottom:4px">${av.emoji}</div>
+<div class="result-emoji">${emoji}</div>
+<div class="result-title">${tier}</div>
+<div class="result-score">${score}</div>
+<div class="result-label">pontos</div>
+<div class="result-stats">
+<div>💥 ${totalPopped} estouradas</div>
+<div>⭐ ${starsCollected} stars</div>
+<div>🔥 max x${maxCombo}</div>
+</div>
+<div class="coupon-box">
+<div class="coupon-label">🎉 Cupom desbloqueado</div>
+<div class="coupon-code">${couponCode}</div>
+<div class="coupon-desc">${couponDesc}</div>
+</div>
+<button class="btn-restart" onclick="restartGame()">JOGAR DE NOVO</button><br>
+<button class="btn-coupon" onclick="copyCoupon('${couponCode}')">COPIAR
+CUPOM</button><br>
+<button class="btn-shop"
+onclick="window.open('https://piny.com.br/productspinybooster','_blank')">Usar cupom na
+loja →</button>
+</div>`;
+screen.classList.add('active');
+if (score >= 250) launchConfetti();
+}
+function copyCoupon(code) {
+const onCopySuccess = () => {
+const b = document.querySelector('.btn-coupon');
+b.textContent = 'COPIADO! ✅'; b.style.background = 'var(--green)'; b.style.color =
+'white'; b.style.borderColor = 'var(--green)';
+playSuccessSound();
+setTimeout(() => { b.textContent = 'COPIAR CUPOM'; b.style.background = 'white';
+b.style.color = 'var(--green)'; b.style.borderColor = 'var(--green)'; }, 2000);
+};
+
+if (navigator.clipboard && window.isSecureContext) {
+navigator.clipboard.writeText(code).then(onCopySuccess);
+return;
+}
+
+const textArea = document.createElement('textarea');
+textArea.value = code;
+textArea.style.position = 'fixed';
+textArea.style.opacity = '0';
+document.body.appendChild(textArea);
+textArea.focus();
+textArea.select();
+document.execCommand('copy');
+textArea.remove();
+onCopySuccess();
+}
+function restartGame() {
+document.getElementById('resultScreen').classList.remove('active');
+document.getElementById('resultScreen').innerHTML = '';
+document.getElementById('startScreen').classList.add('active');
+timerDisplay.parentElement.style.borderColor = 'var(--green)';
+timerDisplay.parentElement.className = 'hud-item timer';
+activePimples = 0;
+}
+function launchConfetti() {
+const colors =
+['#FFD600','#4CAF50','#FF5722','#FF5252','#FFB300','#7C4DFF','#E040FB','#FFF'];
+for (let i = 0; i < 50; i++) {
+setTimeout(() => {
+const c = document.createElement('div');
+c.className = 'confetti-piece';
+Object.assign(c.style, { left:Math.random()*100+'vw',
+background:colors[Math.floor(Math.random()*colors.length)],
+borderRadius:Math.random()>.5?'50%':'2px', width:(6+Math.random()*8)+'px',
+height:(6+Math.random()*8)+'px', animationDuration:(2+Math.random()*2)+'s' });
+document.body.appendChild(c); setTimeout(() => c.remove(), 4000);
+}, i * 50);
+}
+}
+</script>
+</body>
+</html>
